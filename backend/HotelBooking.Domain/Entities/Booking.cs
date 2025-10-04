@@ -5,25 +5,25 @@ namespace HotelBooking.Domain.Entities
     public class Booking : Entity<long>
     {
         private Booking() { }
-        public Booking(Guid userId, Guid roomId, DateTime startDate, DateTime endDate)
+        public Booking(Guid userId, Guid roomId, DateTime checkInDate, DateTime checkOutDate)
         {
             UserId = userId;
             RoomId = roomId;
-            StartDate = startDate;
-            EndDate = endDate;
+            CheckInDate = checkInDate;
+            CheckOutDate = checkOutDate;
             CreatedAt = DateTime.UtcNow;
         }
 
         public Guid UserId { get; init; }
         public Guid RoomId { get; init; }
-        public DateTime StartDate { get; init; }
-        public DateTime EndDate { get; init; }
+        public DateTime CheckInDate { get; init; }
+        public DateTime CheckOutDate { get; init; }
         public DateTime CreatedAt { get; init; }
         public DateTime? CancelledAt { get; private set; }
 
-        public static Booking Create(Guid userId, Guid roomId, DateTime startDate, DateTime endDate)
+        public static Booking Create(Guid userId, Guid roomId, DateTime checkInDate, DateTime checkOutDate)
         {
-            return new Booking(userId, roomId, startDate, endDate);
+            return new Booking(userId, roomId, checkInDate, checkOutDate);
         }
 
         public Result Cancel()

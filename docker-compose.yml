@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     depends_on:
       - mysql-db
-      - postgres-db
+      # - postgres-db
     env_file:
       - .env
     command: ["./scripts/wait-for-mysql.sh", "db", "dotnet", "HotelBooking.Api.dll"]
@@ -35,36 +35,6 @@ services:
       timeout: 5s
       retries: 5
 
-  postgres-db:
-    container_name: hotelbooking-postgres-db
-    image: postgres:latest
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - hotelbooking_postgres_data:/var/lib/postgresql/data
-    env_file:
-      - .env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
-
-  pgadmin:
-    container_name: hotelbooking-pgadmin
-    image: dpage/pgadmin4:latest
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres-db
-    env_file:
-      - .env
-
   phpmyadmin:
     image: phpmyadmin:latest
     container_name: hotelbooking-phpmyadmin
@@ -77,6 +47,36 @@ services:
       PMA_USER: ${MYSQL_USER}
       PMA_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  # postgres-db:
+  #   container_name: hotelbooking-postgres-db
+  #   image: postgres:latest
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_USER: ${DB_USER}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD}
+  #     POSTGRES_DB: ${DB_NAME}
+  #   volumes:
+  #     - hotelbooking_postgres_data:/var/lib/postgresql/data
+  #   env_file:
+  #     - .env
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+  #     interval: 5s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 5s
+
+  # pgadmin:
+  #   container_name: hotelbooking-pgadmin
+  #   image: dpage/pgadmin4:latest
+  #   ports:
+  #     - "5050:80"
+  #   depends_on:
+  #     - postgres-db
+  #   env_file:
+  #     - .env
 
 volumes:
   hotelbooking_mysql_data:

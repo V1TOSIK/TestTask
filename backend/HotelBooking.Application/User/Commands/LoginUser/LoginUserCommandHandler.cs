@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using SharedKernel.Common;
+
 using DomainUser = HotelBooking.Domain.Entities.User;
 
 namespace HotelBooking.Application.User.Commands.LoginUser

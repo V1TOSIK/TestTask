@@ -19,10 +19,10 @@ namespace HotelBooking.Persistence.Configurations
             builder.Property(b => b.RoomId)
                 .IsRequired();
             
-            builder.Property(b => b.StartDate)
+            builder.Property(b => b.CheckInDate)
                 .IsRequired();
             
-            builder.Property(b => b.EndDate)
+            builder.Property(b => b.CheckOutDate)
                 .IsRequired();
             
             builder.Property(b => b.CreatedAt)

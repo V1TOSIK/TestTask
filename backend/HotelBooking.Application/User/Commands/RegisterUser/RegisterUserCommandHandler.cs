@@ -39,17 +39,17 @@ namespace HotelBooking.Application.User.Commands.RegisterUser
             var user = userResult.Value;
             if (user == null)
             {
-                _logger.LogError("User creation failed: User object is null.");
+                _logger.LogWarning("User creation failed: User object is null.");
                 return Result<AuthorizeResponse>.Failure("User creation failed: User object is null.");
             }
             if (user.Email != null && await _userManager.FindByEmailAsync(user.Email.ToString()) != null)
             {
-                _logger.LogError("User registration failed: Email {Email} is already in use.", user.Email);
+                _logger.LogWarning("User registration failed: Email {Email} is already in use.", user.Email);
                 return Result<AuthorizeResponse>.Failure($"Email {user.Email} is already in use.");
             }
             if (user.PhoneNumber != null && await _userManager.Users.AnyAsync(u => u.PhoneNumber == user.PhoneNumber.ToString(), cancellationToken))
             {
-                _logger.LogError("User registration failed: Phone {Phone} is already in use.", user.PhoneNumber);
+                _logger.LogWarning("User registration failed: Phone {Phone} is already in use.", user.PhoneNumber);
                 return Result<AuthorizeResponse>.Failure($"Phone {user.PhoneNumber} is already in use.");
             }
             var result = await _userManager.CreateAsync(user, command.Request.Password);

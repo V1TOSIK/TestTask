@@ -1,8 +1,7 @@
-﻿using HotelBooking.Application.Dtos;
+﻿using HotelBooking.Api.Extensions;
 using HotelBooking.Application.User.Commands.RegisterUser;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.Common;
+using MediatR;
 
 namespace HotelBooking.Api.Controllers.User
 {
@@ -17,14 +16,11 @@ namespace HotelBooking.Api.Controllers.User
         }
 
         [HttpPost("/register")]
-        public async Task<ActionResult<Result<AuthorizeResponse>>> Register([FromBody] RegisterUserRequest request, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request, CancellationToken cancellationToken = default)
         {
-            var command = new RegisterUserCommand(request);
-            var result = await _mediator.Send(command, cancellationToken);
-            if (result.IsSuccess)
-                return Ok(result);
-
-            return BadRequest(result.Error);
+            var result = await _mediator.Send(new RegisterUserCommand(request), cancellationToken);
+            
+            return this.ToActionResult(result);
         }
     }
 }
