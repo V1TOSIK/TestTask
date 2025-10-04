@@ -13,6 +13,7 @@ COPY ["HotelBooking.Domain/HotelBooking.Domain.csproj", "HotelBooking.Domain/"]
 COPY ["HotelBooking.Application/HotelBooking.Application.csproj", "HotelBooking.Application/"]
 COPY ["HotelBooking.Persistence/HotelBooking.Persistence.csproj", "HotelBooking.Persistence/"]
 COPY ["HotelBooking.Infrastructure/HotelBooking.Infrastructure.csproj", "HotelBooking.Infrastructure/"]
+COPY ["SharedKernel/SharedKernel.csproj", "SharedKernel/"]
 
 
 RUN dotnet restore "./HotelBooking.Api/HotelBooking.Api.csproj"

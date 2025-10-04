@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBooking.Persistence", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotelBooking.Infrastructure", "HotelBooking.Infrastructure\HotelBooking.Infrastructure.csproj", "{7AFEB4FF-9648-4297-8F73-01248374BBE5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{5D17F408-54A4-4B23-9D2E-3D490E1BF780}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{7AFEB4FF-9648-4297-8F73-01248374BBE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AFEB4FF-9648-4297-8F73-01248374BBE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AFEB4FF-9648-4297-8F73-01248374BBE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D17F408-54A4-4B23-9D2E-3D490E1BF780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D17F408-54A4-4B23-9D2E-3D490E1BF780}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D17F408-54A4-4B23-9D2E-3D490E1BF780}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D17F408-54A4-4B23-9D2E-3D490E1BF780}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
