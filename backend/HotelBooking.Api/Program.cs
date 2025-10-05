@@ -4,7 +4,10 @@ using HotelBooking.Application.DependencyInjection;
 using HotelBooking.Infrastructure.DependencyInjection;
 using HotelBooking.Persistence;
 using HotelBooking.Persistence.DependencyInjection;
+using HotelBooking.Persistence.Seed;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.CurrentUser;
+using SharedKernel.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +46,9 @@ builder.Services.AddApplication();
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 var app = builder.Build();
 
 
@@ -50,6 +56,8 @@ var app = builder.Build();
 using var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<HotelBookingDbContext>();
 await context.Database.MigrateAsync();
+await DatabaseSeeder.SeedAsync(scope.ServiceProvider);
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -65,6 +73,8 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

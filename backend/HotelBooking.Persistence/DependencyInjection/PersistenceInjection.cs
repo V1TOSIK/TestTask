@@ -2,8 +2,10 @@
 using HotelBooking.Persistence.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlConnector;
 using SharedKernel.Common;
 using SharedKernel.Interfaces;
+using System.Data;
 
 namespace HotelBooking.Persistence.DependencyInjection
 {

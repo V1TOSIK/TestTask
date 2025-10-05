@@ -50,7 +50,7 @@ namespace HotelBooking.Application.User.Commands.LoginUser
 
             var token = _jwtService.GenerateToken(user.Id, roles);
 
-            var response = new AuthorizeResponse(token);
+            var response = new AuthorizeResponse(user.Id, token);
             return Result<AuthorizeResponse>.Success(response);
         }
     }

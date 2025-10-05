@@ -9,16 +9,17 @@ namespace HotelBooking.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Booking> builder)
         {
             builder.HasKey(b => b.Id);
-            
-            builder.Property(b => b.Id)
-                .ValueGeneratedNever();
-            
+
             builder.Property(b => b.UserId)
                 .IsRequired();
             
             builder.Property(b => b.RoomId)
                 .IsRequired();
-            
+
+            builder.Property(b => b.TotalPrice)
+                .IsRequired()
+                .HasColumnType("decimal(18,2)");
+
             builder.Property(b => b.CheckInDate)
                 .IsRequired();
             

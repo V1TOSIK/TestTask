@@ -1,6 +1,6 @@
-﻿namespace HotelBooking.Application.Booking.Commands.BookingRoom
+﻿namespace HotelBooking.Application.Booking.Commands.AddBooking
 {
-    public class BookingRoomRequest
+    public class AddBookingRequest
     {
         public Guid UserId { get; set; }
         public Guid RoomId { get; set; }

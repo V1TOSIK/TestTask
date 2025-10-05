@@ -22,9 +22,13 @@ namespace HotelBooking.Application.Hotel.Queries.GetHotels
         public async Task<Result<PaginationResponse<HotelDto>>> Handle(GetHotelsQuery query, CancellationToken cancellationToken)
         {
             var spec = new Specification<DomainHotel>();
-            //add criteria to spec if needed
 
-            var queryable = _hotelRepository.AsQueryable(cancellationToken);
+            if (query.Cities != null && query.Cities.Any() == true)
+            {
+                spec.AddCriteria(x => query.Cities.Contains(x.Address.City));
+            }
+
+            var queryable = _hotelRepository.AsQueryable(spec, cancellationToken);
 
             var paginatedResult = await queryable.ToPaginatedListAsync(query.PageNumber, query.PageSize, cancellationToken);
 

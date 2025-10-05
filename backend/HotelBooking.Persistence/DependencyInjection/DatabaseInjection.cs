@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MySqlConnector;
+using Npgsql;
+using System.Data;
 
 namespace HotelBooking.Persistence.DependencyInjection
 {
@@ -17,6 +20,11 @@ namespace HotelBooking.Persistence.DependencyInjection
                     options.UseNpgsql(
                         connectionString,
                         b => b.MigrationsAssembly(typeof(HotelBookingDbContext).Assembly.FullName)));
+
+                services.AddTransient<IDbConnection>(sp =>
+                {
+                    return new NpgsqlConnection(connectionString);
+                });
             }
             else if (db == "MySql")
             {
@@ -27,7 +35,13 @@ namespace HotelBooking.Persistence.DependencyInjection
                         connectionString,
                         ServerVersion.AutoDetect(connectionString),
                         b => b.MigrationsAssembly(typeof(HotelBookingDbContext).Assembly.FullName)));
+
+                services.AddTransient<IDbConnection>(sp =>
+                {
+                    return new MySqlConnection(connectionString);
+                });
             }
+
             return services;
         }
     }

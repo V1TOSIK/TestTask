@@ -13,7 +13,7 @@ namespace HotelBooking.Domain.ValueObjects
 
         private Address() { }
 
-        public Address(string country, string city, string street, string building, string zipCode)
+        public Address(string country, string city, string street, string building, string? zipCode)
         {
             if (string.IsNullOrWhiteSpace(country))
                 throw new InvalidAddressDataException("Country cannot be empty");

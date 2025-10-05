@@ -27,17 +27,14 @@ namespace HotelBooking.Domain.Entities
             return new Hotel(name, address, description);
         }
 
-        public void AddRoom(Room room)
+        public Result AddRoom(Room room)
         {
-            _rooms.Add(room);
-        }
+            var existRoom = _rooms.FirstOrDefault(r => r.Number == room.Number);
+            if (existRoom != null)
+                return Result.Failure($"Room with Number: {room.Number} already exist");
 
-        public void AddRooms(IEnumerable<Room> rooms)
-        {
-            foreach (var room in rooms)
-            {
-                _rooms.Add(room);
-            }
+            _rooms.Add(room);
+            return Result.Success();
         }
 
         public void RemoveRoom(Room room)

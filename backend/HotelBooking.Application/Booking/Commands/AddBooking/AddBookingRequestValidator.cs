@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace HotelBooking.Application.Booking.Commands.BookingRoom
+namespace HotelBooking.Application.Booking.Commands.AddBooking
 {
-    public class BookingRoomRequestValidator : AbstractValidator<BookingRoomRequest>
+    public class AddBookingRequestValidator : AbstractValidator<AddBookingRequest>
     {
-        public BookingRoomRequestValidator()
+        public AddBookingRequestValidator()
         {
             RuleFor(x => x.UserId)
                 .NotEmpty().WithMessage("User ID is required.");

@@ -27,6 +27,13 @@ namespace HotelBooking.Persistence.Configurations
                 .WithMany(h => h.Rooms)
                 .HasForeignKey(r => r.HotelId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(r => r.Bookings)
+                .WithOne()
+                .HasForeignKey(r => r.RoomId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(r => new { r.HotelId, r.Number }).IsUnique();
         }
     }
 }

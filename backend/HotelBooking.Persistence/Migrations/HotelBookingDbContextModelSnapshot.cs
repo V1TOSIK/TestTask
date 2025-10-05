@@ -24,8 +24,9 @@ namespace HotelBooking.Persistence.Migrations
 
             modelBuilder.Entity("HotelBooking.Domain.Entities.Booking", b =>
                 {
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<DateTime?>("CancelledAt")
                         .HasColumnType("datetime(6)");
@@ -42,10 +43,15 @@ namespace HotelBooking.Persistence.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("char(36)");
 
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RoomId");
 
                     b.ToTable("Bookings");
                 });
@@ -131,7 +137,8 @@ namespace HotelBooking.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HotelId");
+                    b.HasIndex("HotelId", "Number")
+                        .IsUnique();
 
                     b.ToTable("Rooms");
                 });
@@ -204,7 +211,7 @@ namespace HotelBooking.Persistence.Migrations
                     b.HasIndex("PhoneNumber")
                         .IsUnique();
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -308,6 +315,15 @@ namespace HotelBooking.Persistence.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("HotelBooking.Domain.Entities.Booking", b =>
+                {
+                    b.HasOne("HotelBooking.Domain.Entities.Room", null)
+                        .WithMany("Bookings")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HotelBooking.Domain.Entities.Hotel", b =>
@@ -418,6 +434,11 @@ namespace HotelBooking.Persistence.Migrations
             modelBuilder.Entity("HotelBooking.Domain.Entities.Hotel", b =>
                 {
                     b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("HotelBooking.Domain.Entities.Room", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }

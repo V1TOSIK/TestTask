@@ -21,21 +21,20 @@ namespace HotelBooking.Domain.Entities
         public Guid HotelId { get; private set; }
         public Hotel Hotel { get; private set; } = null!;
 
+        public List<Booking> Bookings { get; private set; }
+
         public static Room Create(int number, int capacity, decimal pricePerNight, Guid hotelId)
         {
             return new Room(number, capacity, pricePerNight, hotelId);
         }
 
-        public Result UpdateDetails(int number, int capacity, decimal pricePerNight)
+        public Result UpdateDetails(int capacity, decimal pricePerNight)
         {
-            if (number <= 0)
-                Result.Failure("Room number must be greater than zero");
             if (capacity <= 0)
                 Result.Failure("Room capacity must be greater than zero");
             if (pricePerNight < 0)
                 Result.Failure("Price per night cannot be negative");
 
-            Number = number;
             Capacity = capacity;
             PricePerNight = pricePerNight;
 

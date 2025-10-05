@@ -1,5 +1,5 @@
 ﻿using HotelBooking.Infrastructure.Options;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -19,11 +19,13 @@ namespace HotelBooking.Infrastructure.DependencyInjection
             {
                 throw new ArgumentNullException("JWT settings are not properly configured.");
             }
+
             var key = Encoding.ASCII.GetBytes(jwtOptions.SecretKey);
+
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -33,13 +35,9 @@ namespace HotelBooking.Infrastructure.DependencyInjection
                     ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = null,
-                    ValidAudience = null,
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-
-            services.AddAuthorization();
 
             return services;
         }

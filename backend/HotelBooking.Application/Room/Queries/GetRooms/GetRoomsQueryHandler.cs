@@ -21,9 +21,31 @@ namespace HotelBooking.Application.Room.Queries.GetRooms
         public async Task<Result<PaginationResponse<RoomDto>>> Handle(GetRoomsQuery query, CancellationToken cancellationToken)
         {
             var spec = new Specification<DomainRoom>();
-            //add criteria to spec if needed
 
-            var queryable = _roomRepository.AsQueryable(cancellationToken);
+            if (query.HotelId != null)
+            {
+                spec.AddCriteria(x => x.HotelId ==  query.HotelId);
+            }
+
+            if (query.Cities != null && query.Cities.Any())
+            {
+                spec.AddInclude(x => x.Hotel);
+                spec.AddCriteria(x => query.Cities.Contains(x.Hotel.Address.City));
+            }
+
+            if (query.CheckInDate.HasValue)
+            {
+                var date = query.CheckInDate.Value.Date;
+                spec.AddInclude(x => x.Bookings);
+
+                spec.AddCriteria(r =>
+                    !r.Bookings.Any(b =>
+                        b.CheckInDate <= date &&
+                        b.CheckOutDate >= date &&
+                        b.CancelledAt == null));
+            }
+
+            var queryable = _roomRepository.AsQueryable(spec, cancellationToken);
 
             var paginatedResult = await queryable.ToPaginatedListAsync(query.PageNumber, query.PageSize, cancellationToken);
 

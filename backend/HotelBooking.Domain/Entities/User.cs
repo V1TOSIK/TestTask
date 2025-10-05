@@ -27,7 +27,7 @@ namespace HotelBooking.Domain.Entities
         }
 
 
-        public static Result<User> Create(string credential)
+        public static Result<User> Create(string credential, UserRole? role = null)
         {
             var parsed = ParseCredential(credential);
 

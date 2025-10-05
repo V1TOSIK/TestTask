@@ -32,42 +32,42 @@ namespace HotelBooking.Application.User.Commands.RegisterUser
             var userResult = DomainUser.Create(command.Request.Credential);
             if (userResult.IsFailure)
             {
-                _logger.LogError("User creation failed: {Error}", userResult.Error);
+                _logger.LogError("[RegisterUserHandler] User creation failed: {Error}", userResult.Error);
                 return Result<AuthorizeResponse>.Failure($"User creation failed: {userResult.Error}");
             }
 
             var user = userResult.Value;
             if (user == null)
             {
-                _logger.LogWarning("User creation failed: User object is null.");
+                _logger.LogWarning("[RegisterUserHandler] User creation failed: User object is null.");
                 return Result<AuthorizeResponse>.Failure("User creation failed: User object is null.");
             }
             if (user.Email != null && await _userManager.FindByEmailAsync(user.Email.ToString()) != null)
             {
-                _logger.LogWarning("User registration failed: Email {Email} is already in use.", user.Email);
+                _logger.LogWarning("[RegisterUserHandler] User registration failed: Email {Email} is already in use.", user.Email);
                 return Result<AuthorizeResponse>.Failure($"Email {user.Email} is already in use.");
             }
             if (user.PhoneNumber != null && await _userManager.Users.AnyAsync(u => u.PhoneNumber == user.PhoneNumber.ToString(), cancellationToken))
             {
-                _logger.LogWarning("User registration failed: Phone {Phone} is already in use.", user.PhoneNumber);
+                _logger.LogWarning("[RegisterUserHandler] User registration failed: Phone {Phone} is already in use.", user.PhoneNumber);
                 return Result<AuthorizeResponse>.Failure($"Phone {user.PhoneNumber} is already in use.");
             }
             var result = await _userManager.CreateAsync(user, command.Request.Password);
             if (!result.Succeeded)
             {
                 var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-                _logger.LogError("User registration failed: {Errors}", errors);
+                _logger.LogError("[RegisterUserHandler] User registration failed: {Errors}", errors);
                 return Result<AuthorizeResponse>.Failure($"User registration failed: {errors}");
             }
             await _userManager.AddToRoleAsync(user, UserRole.User.ToString());
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            _logger.LogInformation("User {UserId} registered successfully.", user.Id);
+            _logger.LogInformation("[RegisterUserHandler] User {UserId} registered successfully.", user.Id);
             
             var token = _jwtService.GenerateToken(user.Id, roles);
 
-            return Result<AuthorizeResponse>.Success(new AuthorizeResponse(token));
+            return Result<AuthorizeResponse>.Success(new AuthorizeResponse(user.Id, token));
         }
     }
 }

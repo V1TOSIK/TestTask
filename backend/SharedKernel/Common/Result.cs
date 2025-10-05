@@ -10,9 +10,10 @@
         protected Result(bool isSuccess, T? value, string? error)
         {
             if (isSuccess && error != null)
-                throw new InvalidOperationException();
-            if (!isSuccess && value != null)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("A successful result cannot have an error message.");
+
+            if (!isSuccess && value != null && !IsNullableType(typeof(T)))
+                throw new InvalidOperationException("A failed result cannot have a value.");
 
             IsSuccess = isSuccess;
             Value = value;
@@ -20,7 +21,11 @@
         }
 
         public static Result<T> Success(T value) => new Result<T>(true, value, null);
+
         public static Result<T> Failure(string error) => new Result<T>(false, default, error);
+
+        private static bool IsNullableType(Type type) =>
+            !type.IsValueType || Nullable.GetUnderlyingType(type) != null;
     }
 
     public class Result

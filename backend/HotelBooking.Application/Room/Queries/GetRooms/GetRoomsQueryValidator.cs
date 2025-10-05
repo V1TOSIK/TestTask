@@ -9,9 +9,12 @@ namespace HotelBooking.Application.Room.Queries.GetRooms
         {
             Include(new PaginationRequestValidator());
 
-            RuleForEach(x => x.Cities)
-                .NotEmpty().WithMessage("City names cannot be empty.")
-                .MaximumLength(100).WithMessage("City names cannot exceed 100 characters.");
+            When(x => x.Cities != null, () =>
+            {
+                RuleForEach(x => x.Cities)
+                    .NotEmpty().WithMessage("City names cannot be empty.")
+                    .MaximumLength(100).WithMessage("City names cannot exceed 100 characters.");
+            });
 
             RuleFor(x => x.CheckInDate)
                 .Must(date => date == null || date.Value.Date >= DateTime.UtcNow.Date)
