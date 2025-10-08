@@ -5,7 +5,7 @@ using MediatR;
 
 namespace HotelBooking.Api.Controllers.User
 {
-    [Route("api/users")]
+    [Route("api/auth")]
     [ApiController]
     public class LoginUserController : ControllerBase
     {

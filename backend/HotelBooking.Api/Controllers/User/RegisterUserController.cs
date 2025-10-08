@@ -5,7 +5,7 @@ using MediatR;
 
 namespace HotelBooking.Api.Controllers.User
 {
-    [Route("api/users")]
+    [Route("api/auth")]
     [ApiController]
     public class RegisterUserController : ControllerBase
     {
@@ -15,7 +15,7 @@ namespace HotelBooking.Api.Controllers.User
             _mediator = mediator;
         }
 
-        [HttpPost("/register")]
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserRequest request, CancellationToken cancellationToken = default)
         {
             var result = await _mediator.Send(new RegisterUserCommand(request), cancellationToken);

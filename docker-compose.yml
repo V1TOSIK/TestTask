@@ -1,11 +1,11 @@
 services:
   frontend:
-    container_name: hotelbooking-backend
+    container_name: hotelbooking-frontend
     build:
       context: ./frontend
       dockerfile: dockerfile
     ports:
-      - "3000:3000"
+      - "3000:80"
 
   backend:
     container_name: hotelbooking-backend

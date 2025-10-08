@@ -9,16 +9,20 @@ namespace HotelBooking.Application.Room.Queries.GetRooms
         {
             Include(new PaginationRequestValidator());
 
-            When(x => x.Cities != null, () =>
+            When(x => x.Cities != null && x.Cities.Any(), () =>
             {
                 RuleForEach(x => x.Cities)
                     .NotEmpty().WithMessage("City names cannot be empty.")
                     .MaximumLength(100).WithMessage("City names cannot exceed 100 characters.");
             });
 
-            RuleFor(x => x.CheckInDate)
-                .Must(date => date == null || date.Value.Date >= DateTime.UtcNow.Date)
-                .WithMessage("Check-in date cannot be in the past.");
+            When(x => x.CheckInDate != null, () =>
+            {
+                RuleFor(x => x.CheckInDate)
+                    .Must(date => date == null || date.Value.Date >= DateTime.UtcNow.Date)
+                    .WithMessage("Check-in date cannot be in the past.");
+
+            });
         }
     }
 }

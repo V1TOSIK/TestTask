@@ -2,6 +2,7 @@
 using HotelBooking.Application.Booking.Commands.AddBooking;
 using HotelBooking.Application.Booking.Queries.GetBookings;
 using HotelBooking.Application.Booking.Queries.GetMyBookings;
+using HotelBooking.Domain.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,7 @@ namespace HotelBooking.Api.Controllers.Booking
             _currentUserService = currentUserService;
         }
 
+        [Authorize(Roles = nameof(UserRole.Admin))]
         [HttpGet]
         public async Task<IActionResult> GetBookings([FromQuery] GetBookingsQuery query, CancellationToken cancellationToken)
         {
@@ -30,7 +32,7 @@ namespace HotelBooking.Api.Controllers.Booking
         }
 
         [Authorize]
-        [HttpGet("{userId}/bookings")]
+        [HttpGet("{userId}")]
         public async Task<IActionResult> GetMyBookings([FromRoute] Guid userId, CancellationToken cancellationToken)
         {
             if (userId != _currentUserService.UserId)
