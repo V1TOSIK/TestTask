@@ -39,7 +39,7 @@ function addModal() {
                 if (data.IsFailure){
                     alert(data.Error);
                 } else {
-                    alert('Updated successfully!');
+                    alert('Added successfully!');
                 }
 
                 if (this.getActiveTab() === 'hotels') await store.fetchHotels();

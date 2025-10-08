@@ -21,10 +21,14 @@ function loginModal() {
       ? `http://localhost:8000/api/auth/register`
       : `http://localhost:8000/api/auth/login`;
 
+      const resBody = this.activeTab === 'register'
+      ? JSON.stringify(this.registerForm)
+      : JSON.stringify(this.loginForm)
+
       const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.loginForm)
+      body: resBody
       });
 
       if (!res.ok) throw new Error(await res.text());
