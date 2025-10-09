@@ -27,16 +27,22 @@ cd Marketplace
 
 # MySQL
 SERVER=mysql-db
+
 PORT=3306
+
 MYSQL_USER=mysql
+
 MYSQL_PASSWORD=mysql
+
 MYSQL_DATABASE=hotelbooking
+
 MYSQL_ROOT_PASSWORD=rootpassword
 
 ConnectionStrings__MySql=Server=${SERVER};Port=${PORT};Database=${MYSQL_DATABASE};User=${MYSQL_USER};Password=${MYSQL_PASSWORD};
 
 # JWT
 JwtOptions__SecretKey=YourSecretKeyHereYourSecretKeyHere
+
 JwtOptions__ExpiryMinutes=600
 
 
