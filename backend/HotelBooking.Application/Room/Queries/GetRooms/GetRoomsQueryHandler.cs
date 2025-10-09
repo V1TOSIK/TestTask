@@ -22,6 +22,8 @@ namespace HotelBooking.Application.Room.Queries.GetRooms
         {
             var spec = new Specification<DomainRoom>();
 
+            spec.AddInclude(x => x.Hotel);
+
             if (query.HotelId != null)
             {
                 spec.AddCriteria(x => x.HotelId ==  query.HotelId);
@@ -29,7 +31,6 @@ namespace HotelBooking.Application.Room.Queries.GetRooms
 
             if (query.Cities != null && query.Cities.Any())
             {
-                spec.AddInclude(x => x.Hotel);
                 spec.AddCriteria(x => query.Cities.Contains(x.Hotel.Address.City));
             }
 
@@ -52,6 +53,7 @@ namespace HotelBooking.Application.Room.Queries.GetRooms
             var items = paginatedResult.Items.Select(r => new RoomDto
             (
                 r.Id,
+                r.Hotel.Name,
                 r.Number,
                 r.Capacity,
                 r.PricePerNight

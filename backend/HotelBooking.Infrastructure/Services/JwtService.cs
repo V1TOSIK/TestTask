@@ -32,7 +32,7 @@ namespace HotelBooking.Infrastructure.Services
             var token = new JwtSecurityToken(
                 signingCredentials: signingCredentials,
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_options.AccessTokenExpirationTime));
+                expires: DateTime.UtcNow.AddMinutes(_options.ExpiryMinutes));
 
             var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
 

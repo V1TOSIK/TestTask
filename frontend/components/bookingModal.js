@@ -1,13 +1,9 @@
-function bookingModal() {
-    return {
+document.addEventListener("alpine:init", () => {
+  Alpine.data("bookingModal", () => ({
         bookingForm: { },
 
-        open() {
-            Alpine.store('globalState').bookingModalOpen = true;
-        },
-
         close() {
-            Alpine.store('globalState').bookingModalOpen = false;
+            Alpine.store('globalState').closeBookingModal();
             this.bookingForm = { };
         },
 
@@ -19,13 +15,23 @@ function bookingModal() {
             try {
                 const store = Alpine.store('globalState');
                 const token = store.currentUser.token;
+                if (!token) {
+                    alert("⛔ You must be logged in to make a booking!");
+                return;
+                }
+
+                this.bookingForm.RoomId = store.bookingRoomId;
+
+                if (!this.bookingForm.RoomId) return;
 
                 if (!store.currentUser.token) {
                     alert("Please log in for booking.");
                     return;
                 }
 
-                if (!bookingForm.bookingCheckIn || !bookingForm.bookingCheckOut) {
+                this.bookingForm.UserId = store.currentUser.id;
+
+                if (!this.bookingForm.CheckInDate || !this.bookingForm.CheckOutDate) {
                     alert("Please confirm date.");
                     return;
                 }
@@ -55,5 +61,5 @@ function bookingModal() {
                 alert('Error: ' + err.message);
             }
         },
-    }
-}
+    }));
+});

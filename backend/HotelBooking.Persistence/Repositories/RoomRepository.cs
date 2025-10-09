@@ -37,18 +37,5 @@ namespace HotelBooking.Persistence.Repositories
 
             return query;
         }
-
-        public async Task<List<RoomDto>> GetAllAsync(CancellationToken cancellationToken)
-        {
-            return await _context.Rooms
-                .Select(r => new RoomDto
-                (
-                    r.Id,
-                    r.Number,
-                    r.Capacity,
-                    r.PricePerNight
-                ))
-                .ToListAsync(cancellationToken);
-        }
     }
 }

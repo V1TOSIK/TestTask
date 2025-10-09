@@ -8,6 +8,10 @@ document.addEventListener('alpine:init', () =>{
         getActiveTab(){
           return Alpine.store('globalState').activeTab;  
         },
+
+        async init() {
+            await Alpine.store('globalState').fetchCities();
+        },
         
         applyFilters() {
             const store = Alpine.store('globalState');

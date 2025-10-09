@@ -4,6 +4,6 @@
     {
         public string SecretKey { get; set; } = string.Empty;
         // in minutes
-        public int AccessTokenExpirationTime { get; set; }
+        public int ExpiryMinutes { get; set; }
     }
 }

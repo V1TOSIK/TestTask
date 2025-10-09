@@ -4,19 +4,20 @@ document.addEventListener('alpine:init', () => {
     addModalOpen: false,
     updateModalOpen: false,
     bookingModalOpen: false,
-
+    
     activeTab: 'hotels',
+    
+    updateEntityId: null,
+    
+    bookingRoomId: null,
+    
     filteredCities: [],
     filteredDate: '',
-
-    bookingRoomId: null,
-    bookingCheckIn: '',
-    bookingCheckOut: '',
-
-
+    
     hotels: [],
     rooms: [],
     bookings: [],
+    cities: [],
 
     hotelsPagination: { page: 1, pageSize: 24, total: 0 },
     roomsPagination: { page: 1, pageSize: 24, total: 0 },
@@ -28,25 +29,35 @@ document.addEventListener('alpine:init', () => {
         token: ''
     },
 
+    openUpdateModal(id) {
+        this.updateEntityId = id;
+        this.updateModalOpen = true;
+    },
+
+    closeUpdateModal() {
+        this.updateModalOpen = false;
+        this.updateEntityId = null;
+    },
+
     openBookingModal(roomId) {
         this.bookingRoomId = roomId;
-        this.bookingCheckIn = '';
-        this.bookingCheckOut = '';
         this.bookingModalOpen = true;
     },
 
     closeBookingModal() {
         this.bookingModalOpen = false;
         this.bookingRoomId = null;
-        this.bookingCheckIn = '';
-        this.bookingCheckOut = '';
     },
 
     setActiveTab(tabName){
-        this.activeTab = tabName,
-        this.filterCity = [],
-        this.filterDate = ''
-    },
+    this.activeTab = tabName;
+    this.filteredCities = [];
+    this.filteredDate = '';
+
+    if (tabName === 'rooms' || tabName === 'hotels') {
+        this.fetchCities();
+    }
+},
 
     checkUserRole(role){
       return this.currentUser.role === role; 
@@ -70,7 +81,6 @@ document.addEventListener('alpine:init', () => {
       .then(async res => {
           if (!res.ok) throw new Error(await res.text());
           alert('Deleted successfully!');
-          // Після видалення оновлюємо список
           if (type === 'hotels') this.fetchHotels();
           else this.fetchRooms();
       })
@@ -79,51 +89,64 @@ document.addEventListener('alpine:init', () => {
       });
     },
 
-     async fetchHotels() {
-          try {
-              const { page, pageSize } = this.hotelsPagination;
+    async fetchHotels() {
+        try {
+            const { page, pageSize } = this.hotelsPagination;
 
-              const selectedCities = this.filteredCities && this.filteredCities.length > 0 ? this.filteredCities : [];
+            const selectedCities = this.filteredCities.length > 0 ? this.filteredCities : null;
 
-              const query = this.buildQueryParams({
-                  pageNumber: page,
-                  pageSize,
-                  cities: selectedCities 
-              });
+            const query = this.buildQueryParams({
+                pageNumber: page,
+                pageSize,
+                cities: selectedCities 
+            });
 
-              const res = await fetch(`http://localhost:8000/api/hotels/${query}`);
-              const data = await res.json();
+            const res = await fetch(`http://localhost:8000/api/hotels/${query}`);
+            const data = await res.json();
 
-              this.hotels = data.value.items;
-              this.hotelsPagination.total = data.value.totalCount;
-          } catch (err) {
-              console.error('Помилка при завантаженні готелів:', err);
-          }
-      },
+            this.hotels = data.value.items;
+            this.hotelsPagination.total = data.value.totalCount;
+        } catch (err) {
+            console.error('Помилка при завантаженні готелів:', err);
+        }
+    },
 
-          async fetchRooms() {
-          try {
-              const { page, pageSize } = this.roomsPagination;
+    async fetchRooms() {
+        try {
+            const { page, pageSize } = this.roomsPagination;
 
-              const selectedCities = this.filteredCities && this.filteredCities.length > 0 ? this.filteredCities : [];
+            const selectedCities = this.filteredCities.length > 0 ? this.filteredCities : null;
 
+            const query = this.buildQueryParams({
+                pageNumber: page,
+                pageSize,
+                cities: selectedCities,
+                checkInDate: this.filteredDate
+            });
 
-              const query = this.buildQueryParams({
-                  pageNumber: page,
-                  pageSize,
-                  cities: selectedCities,
-                  checkInDate: this.filteredDate
-              });
+            const res = await fetch(`http://localhost:8000/api/rooms${query}`);
+            const data = await res.json();
 
-              const res = await fetch(`http://localhost:8000/api/rooms${query}`);
-              const data = await res.json();
+            this.rooms = data.value.items;
+            this.roomsPagination.total = data.value.totalCount;
+        } catch (err) {
+            console.error('Помилка при завантаженні кімнат:', err);
+        }
+    },
 
-              this.rooms = data.value.items;
-              this.roomsPagination.total = data.value.totalCount;
-          } catch (err) {
-              console.error('Помилка при завантаженні кімнат:', err);
-          }
-      },
+    async fetchCities() {
+        try {
+
+            const res = await fetch(`http://localhost:8000/api/hotels/cities`);
+
+            const data = await res.json();
+            this.cities = data.value;
+
+        } catch (err) {
+            console.error('Error when download cities:', err);
+            this.cities = [];
+        }
+    },
 
     async fetchBookings() {
         try {
@@ -158,10 +181,16 @@ document.addEventListener('alpine:init', () => {
     buildQueryParams(params) {
         const query = Object.entries(params)
             .filter(([_, value]) => value !== '' && value !== null && value !== undefined)
-            .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+            .map(([key, value]) => {
+                if (Array.isArray(value)) {
+                    return value.map(v => `${encodeURIComponent(key)}=${encodeURIComponent(v)}`).join('&');
+                }
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+            })
             .join('&');
         return query ? `?${query}` : '';
     },
+
 
     setPage(type, page) {
         if (type === 'hotels') this.hotelsPagination.page = page;

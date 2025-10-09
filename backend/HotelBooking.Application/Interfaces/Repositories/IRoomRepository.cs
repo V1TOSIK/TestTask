@@ -8,6 +8,5 @@ namespace HotelBooking.Application.Interfaces.Repositories
     {
         Task<DomainRoom?> GetByIdAsync(Guid roomId, CancellationToken cancellationToken);
         IQueryable<DomainRoom> AsQueryable(Specification<DomainRoom> spec, CancellationToken cancellationToken);
-        Task<List<RoomDto>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

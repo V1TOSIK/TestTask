@@ -1,13 +1,9 @@
-function updateModal() {
-    return {
+document.addEventListener("alpine:init", () => {
+  Alpine.data("updateModal", () => ({
         updateForm: { },
 
-        open() {
-            Alpine.store('globalState').updateModalOpen = true;
-        },
-
         close() {
-            Alpine.store('globalState').updateModalOpen = false;
+            Alpine.store('globalState').closeUpdateModal();
             this.updateForm = { };
         },
 
@@ -20,9 +16,18 @@ function updateModal() {
                 const store = Alpine.store('globalState');
                 const token = store.currentUser.token;
 
+                const modelId = store.updateEntityId;
+
+                if (!modelId) return;
+
+                if (this.getActiveTab() === 'hotels')
+                    this.updateForm.HotelId = modelId;
+                else if (this.getActiveTab() === 'rooms')
+                    this.updateForm.RoomId = modelId;
+
                 const url = this.getActiveTab() === 'hotels'
-                    ? `http://localhost:8000/api/hotels/${id}`
-                    : `http://localhost:8000/api/rooms/${id}`;
+                    ? `http://localhost:8000/api/hotels/${this.updateForm.HotelId}`
+                    : `http://localhost:8000/api/rooms/${this.updateForm.RoomId}`;
 
                 const res = await fetch(url, {
                     method: 'PATCH',
@@ -42,7 +47,7 @@ function updateModal() {
                     alert('Updated successfully!');
                 }
 
-                if (type === 'hotels') await store.fetchHotels();
+                if (this.getActiveTab() === 'hotels') await store.fetchHotels();
                 else await store.fetchRooms();
 
                 this.close();
@@ -50,5 +55,5 @@ function updateModal() {
                 alert('Error: ' + err.message);
             }
         },
-    }
-}
+    }));
+});

@@ -63,6 +63,16 @@ namespace HotelBooking.Persistence.Repositories
                     .FirstOrDefaultAsync(h => h.Id == hotelId, cancellationToken);
         }
 
+        public async Task<Result<IEnumerable<string>>> GetHotelCitiesAsync(CancellationToken cancellationToken)
+        {
+            var cities = await _context.Hotels
+                .Select(h => h.Address.City)
+                .ToListAsync(cancellationToken);
+
+            Console.WriteLine($"Found {cities.Count} cities: {string.Join(", ", cities)}");
+            return Result<IEnumerable<string>>.Success(cities);
+        }
+
         public async Task<Result<Guid>> AddAsync(Hotel hotel, CancellationToken cancellationToken)
         {
             var user = await GetByIdAsync(hotel.Id, false, cancellationToken);

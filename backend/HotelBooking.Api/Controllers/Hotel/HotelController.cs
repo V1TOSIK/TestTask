@@ -2,6 +2,7 @@
 using HotelBooking.Application.Hotel.Commands.AddHotel;
 using HotelBooking.Application.Hotel.Commands.DeleteHotel;
 using HotelBooking.Application.Hotel.Commands.UpdateHotel;
+using HotelBooking.Application.Hotel.Queries.GetCities;
 using HotelBooking.Application.Hotel.Queries.GetHotels;
 using HotelBooking.Domain.Enums;
 using MediatR;
@@ -24,6 +25,14 @@ namespace HotelBooking.Api.Controllers.Hotel
         public async Task<IActionResult> GetHotels([FromQuery] GetHotelsQuery query, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(query, cancellationToken);
+
+            return this.ToActionResult(result);
+        }
+
+        [HttpGet("cities")]
+        public async Task<IActionResult> GetCities(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetCitiesQuery(), cancellationToken);
 
             return this.ToActionResult(result);
         }
